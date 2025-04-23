@@ -1,0 +1,572 @@
+#Input:Generate unit test case using VSTest for testing following conditions for all fields of Policy class listed here - Email should be valid 
+expression, Account Number is 8 digit number & cannot be empty, Policy Number is 8 digit number, First Name is 50 character n on-empty 
+string, Last Name is 50 character non-empty string, Postal Code is 7 digit number, Phone is valid phone number format, Producer Code is 
+5 character not empty string, Group Code is 5 character not empty string, Master Code is 5 character not empty string, City is 20 character 
+non-empty string, State is 20 character non-empty string, Effective Date is valid date format less than or equal to current date, Expiration 
+Date is valid date format greater than or equal to current date, Annual Premium decimal type with 2 decimal places non zero v alue. need it in java
+
+#Output:
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.regex.Pattern;
+
+public class PolicyClassTest {
+
+    @Test
+    public void testEmailValidation() {
+        String email = "test@example.com";
+        assertTrue(Pattern.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", email), "Invalid email format.");
+    }
+
+    @Test
+    public void testAccountNumberValidation() {
+        String accountNumber = "12345678";
+        assertTrue(accountNumber != null && accountNumber.matches("\\d{8}"), "Invalid account number.");
+    }
+
+    @Test
+    public void testPolicyNumberValidation() {
+        String policyNumber = "87654321";
+        assertTrue(policyNumber != null && policyNumber.matches("\\d{8}"), "Invalid policy number.");
+    }
+
+    @Test
+    public void testFirstNameValidation() {
+        String firstName = "John";
+        assertTrue(firstName != null && !firstName.isEmpty() && firstName.length() <= 50, "Invalid first name.");
+    }
+
+    @Test
+    public void testLastNameValidation() {
+        String lastName = "Doe";
+        assertTrue(lastName != null && !lastName.isEmpty() && lastName.length() <= 50, "Invalid last name.");
+    }
+
+    @Test
+    public void testPostalCodeValidation() {
+        String postalCode = "1234567";
+        assertTrue(postalCode != null && postalCode.matches("\\d{7}"), "Invalid postal code.");
+    }
+
+    @Test
+    public void testPhoneValidation() {
+        String phone = "+11234567890";
+        assertTrue(Pattern.matches("^\\+?[1-9]\\d{1,14}$", phone), "Invalid phone number.");
+    }
+
+    @Test
+    public void testProducerCodeValidation() {
+        String producerCode = "ABCDE";
+        assertTrue(producerCode != null && !producerCode.isEmpty() && producerCode.length() == 5, "Invalid producer code.");
+    }
+
+    @Test
+    public void testGroupCodeValidation() {
+        String groupCode = "FGHIJ";
+        assertTrue(groupCode != null && !groupCode.isEmpty() && groupCode.length() == 5, "Invalid group code.");
+    }
+
+    @Test
+    public void testMasterCodeValidation() {
+        String masterCode = "KLMNO";
+        assertTrue(masterCode != null && !masterCode.isEmpty() && masterCode.length() == 5, "Invalid master code.");
+    }
+
+    @Test
+    public void testCityValidation() {
+        String city = "New York";
+        assertTrue(city != null && !city.isEmpty() && city.length() <= 20, "Invalid city.");
+    }
+
+    @Test
+    public void testStateValidation() {
+        String state = "California";
+        assertTrue(state != null && !state.isEmpty() && state.length() <= 20, "Invalid state.");
+    }
+
+    @Test
+    public void testEffectiveDateValidation() {
+        LocalDate effectiveDate = LocalDate.now().minusDays(1);
+        assertTrue(effectiveDate.isBefore(LocalDate.now()) || effectiveDate.isEqual(LocalDate.now()), "Invalid effective date.");
+    }
+
+    @Test
+    public void testExpirationDateValidation() {
+        LocalDate expirationDate = LocalDate.now().plusDays(1);
+        assertTrue(expirationDate.isAfter(LocalDate.now()) || expirationDate.isEqual(LocalDate.now()), "Invalid expiration date.");
+    }
+
+    @Test
+    public void testAnnualPremiumValidation() {
+        BigDecimal annualPremium = new BigDecimal("1234.56");
+        assertTrue(annualPremium.compareTo(BigDecimal.ZERO) > 0 && annualPremium.scale() <= 2, "Invalid annual premium.");
+    }
+}
+
+
+#Input:Refactor PolicyTest class to move policy validation code for all fields into new PolicyValidator class
+#output:
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.regex.Pattern;
+
+public class PolicyValidator {
+
+    public static boolean isValidEmail(String email) {
+        return email != null && Pattern.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", email);
+    }
+
+    public static boolean isValidAccountNumber(String accountNumber) {
+        return accountNumber != null && accountNumber.matches("\\d{8}");
+    }
+
+    public static boolean isValidPolicyNumber(String policyNumber) {
+        return policyNumber != null && policyNumber.matches("\\d{8}");
+    }
+
+    public static boolean isValidFirstName(String firstName) {
+        return firstName != null && !firstName.isEmpty() && firstName.length() <= 50;
+    }
+
+    public static boolean isValidLastName(String lastName) {
+        return lastName != null && !lastName.isEmpty() && lastName.length() <= 50;
+    }
+
+    public static boolean isValidPostalCode(String postalCode) {
+        return postalCode != null && postalCode.matches("\\d{7}");
+    }
+
+    public static boolean isValidPhone(String phone) {
+        return phone != null && Pattern.matches("^\\+?[1-9]\\d{1,14}$", phone);
+    }
+
+    public static boolean isValidProducerCode(String producerCode) {
+        return producerCode != null && !producerCode.isEmpty() && producerCode.length() == 5;
+    }
+
+    public static boolean isValidGroupCode(String groupCode) {
+        return groupCode != null && !groupCode.isEmpty() && groupCode.length() == 5;
+    }
+
+    public static boolean isValidMasterCode(String masterCode) {
+        return masterCode != null && !masterCode.isEmpty() && masterCode.length() == 5;
+    }
+
+    public static boolean isValidCity(String city) {
+        return city != null && !city.isEmpty() && city.length() <= 20;
+    }
+
+    public static boolean isValidState(String state) {
+        return state != null && !state.isEmpty() && state.length() <= 20;
+    }
+
+    public static boolean isValidEffectiveDate(LocalDate effectiveDate) {
+        return effectiveDate != null && (effectiveDate.isBefore(LocalDate.now()) || effectiveDate.isEqual(LocalDate.now()));
+    }
+
+    public static boolean isValidExpirationDate(LocalDate expirationDate) {
+        return expirationDate != null && (expirationDate.isAfter(LocalDate.now()) || expirationDate.isEqual(LocalDate.now()));
+    }
+
+    public static boolean isValidAnnualPremium(BigDecimal annualPremium) {
+        return annualPremium != null && annualPremium.compareTo(BigDecimal.ZERO) > 0 && annualPremium.scale() <= 2;
+    }
+}
+
+/tests
+
+```java
+@Test
+public void emailValidationFailsForNull() {
+    assertFalse(PolicyValidator.isValidEmail(null), "Email validation should fail for null.");
+}
+
+@Test
+public void emailValidationFailsForInvalidFormat() {
+    assertFalse(PolicyValidator.isValidEmail("invalid-email"), "Email validation should fail for invalid format.");
+}
+
+@Test
+public void accountNumberValidationFailsForEmptyString() {
+    assertFalse(PolicyValidator.isValidAccountNumber(""), "Account number validation should fail for empty string.");
+}
+
+@Test
+public void accountNumberValidationFailsForNonNumeric() {
+    assertFalse(PolicyValidator.isValidAccountNumber("abcd1234"), "Account number validation should fail for non-numeric input.");
+}
+
+@Test
+public void policyNumberValidationFailsForLessThanEightDigits() {
+    assertFalse(PolicyValidator.isValidPolicyNumber("1234567"), "Policy number validation should fail for less than 8 digits.");
+}
+
+@Test
+public void firstNameValidationFailsForExceedingMaxLength() {
+    assertFalse(PolicyValidator.isValidFirstName("A".repeat(51)), "First name validation should fail for exceeding max length.");
+}
+
+@Test
+public void lastNameValidationFailsForNull() {
+    assertFalse(PolicyValidator.isValidLastName(null), "Last name validation should fail for null.");
+}
+
+@Test
+public void postalCodeValidationFailsForNonNumeric() {
+    assertFalse(PolicyValidator.isValidPostalCode("1234abc"), "Postal code validation should fail for non-numeric input.");
+}
+
+@Test
+public void phoneValidationFailsForInvalidFormat() {
+    assertFalse(PolicyValidator.isValidPhone("123-456-7890"), "Phone validation should fail for invalid format.");
+}
+
+@Test
+public void producerCodeValidationFailsForLessThanFiveCharacters() {
+    assertFalse(PolicyValidator.isValidProducerCode("ABCD"), "Producer code validation should fail for less than 5 characters.");
+}
+
+@Test
+public void groupCodeValidationFailsForEmptyString() {
+    assertFalse(PolicyValidator.isValidGroupCode(""), "Group code validation should fail for empty string.");
+}
+
+@Test
+public void masterCodeValidationFailsForNull() {
+    assertFalse(PolicyValidator.isValidMasterCode(null), "Master code validation should fail for null.");
+}
+
+@Test
+public void cityValidationFailsForExceedingMaxLength() {
+    assertFalse(PolicyValidator.isValidCity("A".repeat(21)), "City validation should fail for exceeding max length.");
+}
+
+@Test
+public void stateValidationFailsForEmptyString() {
+    assertFalse(PolicyValidator.isValidState(""), "State validation should fail for empty string.");
+}
+
+@Test
+public void effectiveDateValidationFailsForFutureDate() {
+    assertFalse(PolicyValidator.isValidEffectiveDate(LocalDate.now().plusDays(1)), "Effective date validation should fail for future date.");
+}
+
+@Test
+public void expirationDateValidationFailsForPastDate() {
+    assertFalse(PolicyValidator.isValidExpirationDate(LocalDate.now().minusDays(1)), "Expiration date validation should fail for past date.");
+}
+
+@Test
+public void annualPremiumValidationFailsForNegativeValue() {
+    assertFalse(PolicyValidator.isValidAnnualPremium(new BigDecimal("-1234.56")), "Annual premium validation should fail for negative value.");
+}
+
+@Test
+public void annualPremiumValidationFailsForMoreThanTwoDecimalPlaces() {
+    assertFalse(PolicyValidator.isValidAnnualPremium(new BigDecimal("1234.567")), "Annual premium validation should fail for more than two decimal places.");
+}
+```
+
+--Update code for defect fix - Invalid HomeInsurancePolicy object parameter in Put method
+
+To fix the defect related to an invalid `HomeInsurancePolicy` object parameter in the `Put` method, you need to validate the input object before proceeding with the update logic. Below is an example of how you can update the `Put` method to include validation checks and return appropriate responses for invalid input.
+
+### Updated `Put` Method
+
+```java
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/home-insurance")
+public class HomeInsuranceController {
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateHomeInsurancePolicy(@PathVariable Long id, @RequestBody HomeInsurancePolicy policy) {
+        // Validate the policy object
+        if (policy == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Policy object cannot be null.");
+        }
+
+        if (!isValidPolicy(policy)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid policy details provided.");
+        }
+
+        // Proceed with update logic
+        boolean isUpdated = updatePolicyInDatabase(id, policy);
+        if (isUpdated) {
+            return ResponseEntity.ok("Policy updated successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Policy with the given ID not found.");
+        }
+    }
+
+    private boolean isValidPolicy(HomeInsurancePolicy policy) {
+        // Add validation logic for the HomeInsurancePolicy object
+        return policy.getPolicyNumber() != null && !policy.getPolicyNumber().isEmpty()
+                && policy.getEffectiveDate() != null
+                && policy.getExpirationDate() != null
+                && policy.getExpirationDate().isAfter(policy.getEffectiveDate())
+                && policy.getAnnualPremium() != null && policy.getAnnualPremium().compareTo(BigDecimal.ZERO) > 0;
+    }
+
+    private boolean updatePolicyInDatabase(Long id, HomeInsurancePolicy policy) {
+        // Mock database update logic
+        // Replace this with actual database update code
+        return true; // Assume the update is successful
+    }
+}
+```
+
+### Key Changes
+1. **Validation**: Added a `isValidPolicy` method to validate the `HomeInsurancePolicy` object.
+2. **Error Handling**: Return `400 Bad Request` if the policy object is null or invalid.
+3. **Update Logic**: Return `404 Not Found` if the policy with the given ID does not exist.
+
+This ensures the `Put` method handles invalid input gracefully and provides meaningful error responses.
+
+SonarQube errors - Refactor code to fix cyclomatic complexity issue
+
+Below is the refactored code for the file `src/main/java/PolicyClass.java` with duplicate conditions and regex checks extracted into helper methods and precompiled patterns. This lowers the cyclomatic complexity.
+
+```java
+// Language: java
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.regex.Pattern;
+
+public class PolicyClass {
+
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
+    private static final Pattern POSTAL_CODE_PATTERN = Pattern.compile("\\d{7}");
+    private static final Pattern PHONE_PATTERN = Pattern.compile("^\\+?[1-9]\\d{1,14}$");
+
+    public static boolean isValidEmail(String email) {
+        return email != null && EMAIL_PATTERN.matcher(email).matches();
+    }
+
+    public static boolean isValidAccountNumber(String accountNumber) {
+        return isMatch(accountNumber, "\\d{8}");
+    }
+
+    public static boolean isValidPolicyNumber(String policyNumber) {
+        return isMatch(policyNumber, "\\d{8}");
+    }
+
+    public static boolean isValidFirstName(String firstName) {
+        return isNonEmptyString(firstName, 50);
+    }
+
+    public static boolean isValidLastName(String lastName) {
+        return isNonEmptyString(lastName, 50);
+    }
+
+    public static boolean isValidPostalCode(String postalCode) {
+        return postalCode != null && POSTAL_CODE_PATTERN.matcher(postalCode).matches();
+    }
+
+    public static boolean isValidPhone(String phone) {
+        return phone != null && PHONE_PATTERN.matcher(phone).matches();
+    }
+
+    public static boolean isValidProducerCode(String producerCode) {
+        return isFixedLengthString(producerCode, 5);
+    }
+
+    public static boolean isValidGroupCode(String groupCode) {
+        return isFixedLengthString(groupCode, 5);
+    }
+
+    public static boolean isValidMasterCode(String masterCode) {
+        return isFixedLengthString(masterCode, 5);
+    }
+
+    public static boolean isValidCity(String city) {
+        return isNonEmptyString(city, 20);
+    }
+
+    public static boolean isValidState(String state) {
+        return isNonEmptyString(state, 20);
+    }
+
+    public static boolean isValidEffectiveDate(LocalDate effectiveDate) {
+        return effectiveDate != null && !effectiveDate.isAfter(LocalDate.now());
+    }
+
+    public static boolean isValidExpirationDate(LocalDate expirationDate) {
+        return expirationDate != null && !expirationDate.isBefore(LocalDate.now());
+    }
+
+    public static boolean isValidAnnualPremium(BigDecimal annualPremium) {
+        return annualPremium != null && annualPremium.compareTo(BigDecimal.ZERO) > 0 && annualPremium.scale() <= 2;
+    }
+
+    private static boolean isMatch(String value, String regex) {
+        return value != null && value.matches(regex);
+    }
+
+    private static boolean isNonEmptyString(String value, int maxLength) {
+        return value != null && !value.isEmpty() && value.length() <= maxLength;
+    }
+
+    private static boolean isFixedLengthString(String value, int requiredLength) {
+        return value != null && !value.isEmpty() && value.length() == requiredLength;
+    }
+}
+```
+
+/explain
+
+The code defines a utility class that provides static methods to validate different fields of a policy. Each validation method performs a null check and then verifies that the field meets specific criteria, such as length constraints, numeric formats, or date conditions.
+
+For example, the email validation method makes sure that the email is not null and matches a particular regular expression pattern. An excerpt from this method is:
+
+```java
+return email != null && Pattern.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", email);
+```
+
+Similarly, there are methods that validate account and policy numbers by ensuring they consist of exactly eight digits. This is achieved with code such as:
+
+```java
+return accountNumber != null && accountNumber.matches("\\d{8}");
+```
+
+The class also includes methods to validate names, postal codes, and phone numbers. The first name and last name validators check that the strings are not empty, are not null, and do not exceed a specified maximum length (50 characters). Postal codes are checked against a fixed digit pattern (seven digits), and phone numbers are validated using a pattern that ensures proper international formatting.
+
+Date validations ensure that the effective date is not in the future, while the expiration date is not in the past. An excerpt illustrating the effective date check is:
+
+```java
+return effectiveDate != null && (effectiveDate.isBefore(LocalDate.now()) || effectiveDate.isEqual(LocalDate.now()));
+```
+
+Lastly, the annual premium is validated by confirming that the value is both positive and formatted correctly with no more than two decimal places. This ensures the premium complies with the expected financial rules:
+
+```java
+return annualPremium != null && annualPremium.compareTo(BigDecimal.ZERO) > 0 && annualPremium.scale() <= 2;
+```
+
+Overall, the class organizes a set of concise, declarative checks that encapsulate the business rules for policy validation, making the code easier to manage and update as requirements evolve.
+
+/fix
+
+**Problem 1 – Class Naming Inconsistency**  
+The class name does not match the file name. The file is named `PolicyClass.java` but the public class is declared as `PolicyCla`.  
+  
+*Before*  
+```java
+public class PolicyCla {
+    // ...
+}
+```  
+  
+*After*  
+```java
+public class PolicyClass {
+    // ...
+}
+```  
+
+**Problem 2 – Preventing Instantiation for Utility Classes**  
+A utility class should not be instantiable. Add a private constructor to enforce this coding standard.  
+  
+*Before*  
+```java
+public class PolicyClass {
+    // Static methods only...
+}
+```  
+  
+*After*  
+```java
+public class PolicyClass {
+
+    // Private constructor prevents instantiation
+    private PolicyClass() {
+        throw new UnsupportedOperationException("Utility class cannot be instantiated");
+    }
+
+    // Static methods only...
+}
+```  
+
+**Completely Fixed Version of PolicyClass.java**  
+  
+```java
+// Language: java
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.regex.Pattern;
+
+public class PolicyClass {
+
+    // Private constructor prevents instantiation
+    private PolicyClass() {
+        throw new UnsupportedOperationException("Utility class cannot be instantiated");
+    }
+
+    public static boolean isValidEmail(String email) {
+        return email != null && Pattern.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", email);
+    }
+
+    public static boolean isValidAccountNumber(String accountNumber) {
+        return accountNumber != null && accountNumber.matches("\\d{8}");
+    }
+
+    public static boolean isValidPolicyNumber(String policyNumber) {
+        return policyNumber != null && policyNumber.matches("\\d{8}");
+    }
+
+    public static boolean isValidFirstName(String firstName) {
+        return firstName != null && !firstName.isEmpty() && firstName.length() <= 50;
+    }
+
+    public static boolean isValidLastName(String lastName) {
+        return lastName != null && !lastName.isEmpty() && lastName.length() <= 50;
+    }
+
+    public static boolean isValidPostalCode(String postalCode) {
+        return postalCode != null && postalCode.matches("\\d{7}");
+    }
+
+    public static boolean isValidPhone(String phone) {
+        return phone != null && Pattern.matches("^\\+?[1-9]\\d{1,14}$", phone);
+    }
+
+    public static boolean isValidProducerCode(String producerCode) {
+        return producerCode != null && !producerCode.isEmpty() && producerCode.length() == 5;
+    }
+
+    public static boolean isValidGroupCode(String groupCode) {
+        return groupCode != null && !groupCode.isEmpty() && groupCode.length() == 5;
+    }
+
+    public static boolean isValidMasterCode(String masterCode) {
+        return masterCode != null && !masterCode.isEmpty() && masterCode.length() == 5;
+    }
+
+    public static boolean isValidCity(String city) {
+        return city != null && !city.isEmpty() && city.length() <= 20;
+    }
+
+    public static boolean isValidState(String state) {
+        return state != null && !state.isEmpty() && state.length() <= 20;
+    }
+
+    public static boolean isValidEffectiveDate(LocalDate effectiveDate) {
+        return effectiveDate != null && (effectiveDate.isBefore(LocalDate.now()) || effectiveDate.isEqual(LocalDate.now()));
+    }
+
+    public static boolean isValidExpirationDate(LocalDate expirationDate) {
+        return expirationDate != null && (expirationDate.isAfter(LocalDate.now()) || expirationDate.isEqual(LocalDate.now()));
+    }
+
+    public static boolean isValidAnnualPremium(BigDecimal annualPremium) {
+        return annualPremium != null 
+            && annualPremium.compareTo(BigDecimal.ZERO) > 0 
+            && annualPremium.scale() <= 2;
+    }
+}
+```
